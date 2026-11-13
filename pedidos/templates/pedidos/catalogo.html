@@ -1,0 +1,46 @@
+{% extends 'pedidos/base.html' %}
+{% load formato_clp %}
+{% block content %}
+<h2>Catálogo de Productos</h2>
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-5">
+        <input type="text" name="q" value="{{ busqueda }}" class="form-control" placeholder="Buscar por nombre...">
+    </div>
+    <div class="col-md-4">
+        <select name="categoria" class="form-select">
+            <option value="">Todas las categorías</option>
+            {% for c in categorias %}
+                <option value="{{ c.id }}" {% if categoria_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-dark w-100" type="submit">Filtrar</button>
+    </div>
+</form>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for p in productos %}
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <span class="badge bg-secondary mb-2">{{ p.categoria.nombre }}</span>
+                <h5 class="card-title">{{ p.nombre }}</h5>
+                <p class="fs-5 fw-bold text-success">{{ p.precio|clp }}</p>
+                {% if p.stock > 0 %}
+                    <p class="text-muted">Disponibles: {{ p.stock }}</p>
+                    <form method="post" action="{% url 'agregar_carrito' p.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary w-100">Agregar al carrito</button>
+                    </form>
+                {% else %}
+                    <span class="badge bg-danger fs-6">Agotado</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No se encontraron productos.</p>
+    {% endfor %}
+</div>
+{% endblock %}

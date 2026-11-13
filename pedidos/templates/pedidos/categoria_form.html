@@ -1,0 +1,12 @@
+{% extends 'pedidos/base.html' %}
+{% block content %}
+<h2>{{ accion }} Formulario</h2>
+<form method="post" class="card p-4 bg-white">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a href="{% url 'redireccion_rol' %}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+{% endblock %}

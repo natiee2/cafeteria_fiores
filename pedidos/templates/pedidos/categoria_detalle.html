@@ -1,0 +1,7 @@
+{% extends 'pedidos/base.html' %}
+{% block content %}
+<h2>Detalle Categoría: {{ categoria.nombre }}</h2>
+<p><strong>Descripción:</strong> {{ categoria.descripcion|default:"Sin descripción" }}</p>
+<p><strong>Activa:</strong> {{ categoria.activa|yesno:"Sí,No" }}</p>
+<a href="{% url 'categoria_lista' %}" class="btn btn-secondary">Volver</a>
+{% endblock %}

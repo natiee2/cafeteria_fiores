@@ -1,0 +1,12 @@
+{% extends 'pedidos/base.html' %}
+{% block content %}
+<div class="card border-danger p-4">
+    <h4>Confirmar eliminación de {{ tipo }}</h4>
+    <p>¿Estás seguro de que deseas eliminar <strong>{{ objeto }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="{% url url_volver %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

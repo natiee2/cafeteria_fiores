@@ -1,0 +1,29 @@
+{% extends 'pedidos/base.html' %}
+{% load formato_clp %}
+{% block content %}
+<h2>Mis Pedidos</h2>
+{% for p in pedidos %}
+<div class="card mb-3">
+    <div class="card-header d-flex justify-content-between">
+        <span><strong>Pedido #{{ p.id }}</strong> - Retiro: {{ p.hora_retiro|time:"H:i" }}</span>
+        <span class="badge bg-primary">{{ p.estado }}</span>
+    </div>
+    <div class="card-body">
+        <ul>
+        {% for d in p.detalles.all %}
+            <li>{{ d.cantidad }}x {{ d.producto.nombre }} ({{ d.precio_unitario|clp }} c/u) = {{ d.subtotal|clp }}</li>
+        {% endfor %}
+        </ul>
+        <p><strong>Total: {{ p.total|clp }}</strong></p>
+        {% if p.estado == 'Pendiente' %}
+        <form method="post" action="{% url 'cancelar_pedido' p.id %}">
+            {% csrf_token %}
+            <button class="btn btn-danger btn-sm">Cancelar Pedido</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% empty %}
+<p>Aún no tienes pedidos realizados.</p>
+{% endfor %}
+{% endblock %}

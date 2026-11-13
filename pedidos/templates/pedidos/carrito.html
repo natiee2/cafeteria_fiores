@@ -1,0 +1,56 @@
+{% extends 'pedidos/base.html' %}
+{% load formato_clp %}
+{% block content %}
+<h2>Mi Carrito</h2>
+{% if items %}
+<table class="table bg-white">
+    <thead><tr><th>Producto</th><th>Precio</th><th>Cantidad</th><th>Subtotal</th><th>Quitar</th></tr></thead>
+    <tbody>
+    {% for item in items %}
+        <tr>
+            <td>{{ item.producto.nombre }}</td>
+            <td>{{ item.producto.precio|clp }}</td>
+            <td>
+                <form method="post" action="{% url 'actualizar_carrito' item.producto.id %}" class="d-flex gap-2" style="max-width: 150px;">
+                    {% csrf_token %}
+                    <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" max="{{ item.producto.stock }}" class="form-control form-control-sm">
+                    <button class="btn btn-sm btn-outline-primary">OK</button>
+                </form>
+            </td>
+            <td>{{ item.subtotal|clp }}</td>
+            <td>
+                <form method="post" action="{% url 'quitar_carrito' item.producto.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-danger">X</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Total: {{ total|clp }}</h4>
+    <form method="post" action="{% url 'vaciar_carrito' %}">
+        {% csrf_token %}
+        <button class="btn btn-outline-danger">Vaciar Carrito</button>
+    </form>
+</div>
+
+<form method="post" action="{% url 'confirmar_pedido' %}" class="card p-4 bg-white">
+    {% csrf_token %}
+    <h5>Confirmar Pedido</h5>
+    <div class="mb-3">
+        <label class="form-label">Hora de retiro (08:00 a 18:00, mínimo 20 min desde ahora):</label>
+        <input type="time" name="hora_retiro" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Observación (opcional):</label>
+        <textarea name="observacion" class="form-control" rows="2"></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Confirmar Pedido</button>
+</form>
+{% else %}
+<p>Tu carrito está vacío. <a href="{% url 'catalogo' %}">Ir al catálogo</a></p>
+{% endif %}
+{% endblock %}

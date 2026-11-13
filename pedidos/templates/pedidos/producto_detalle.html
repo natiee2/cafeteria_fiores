@@ -1,0 +1,13 @@
+{% extends 'pedidos/base.html' %}
+{% load formato_clp %}
+{% block content %}
+<h2>{{ producto.codigo }} - {{ producto.nombre }}</h2>
+<ul>
+    <li><strong>Categoría:</strong> {{ producto.categoria.nombre }}</li>
+    <li><strong>Precio:</strong> {{ producto.precio|clp }}</li>
+    <li><strong>Stock:</strong> {{ producto.stock }}</li>
+    <li><strong>Disponible:</strong> {{ producto.disponible|yesno:"Sí,No" }}</li>
+    <li><strong>Creado:</strong> {{ producto.creado }}</li>
+</ul>
+<a href="{% url 'producto_lista' %}" class="btn btn-secondary">Volver</a>
+{% endblock %}
